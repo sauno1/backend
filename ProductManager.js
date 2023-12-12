@@ -1,6 +1,20 @@
+const fs = require('fs');
+
 class ProductManager {
 	constructor(){
-		this.products = []
+		this.products = [];
+		this.filePath = 'products.json';
+		this.loadProductsFromFile();
+	}
+	loadProductsFromFile(){
+		try{
+			const data = fs.readFileSync(this.filePath, 'utf8');
+		} catch (err) {
+			this.products = [];
+		}
+	}
+	saveProductsToFile() {
+		fs.writeFileSync(this.filePath, JSON.stringify(this.products, null, 2), 'utf8');
 	}
 	getProducts(){
 		return this.products
@@ -27,10 +41,23 @@ class ProductManager {
 				product.id = this.products.length + 1
 				this.products.push(product)
 			}
+			this.saveProductsToFile();
 			return 'Producto agregado'
 			
-
-			
+	}
+	updateProduct(id, UpdatedFields){
+		const productIndex = this.products.findIndex(product =>product.id===id);
+		if(productIndex === -1) {
+			return 'No se encontró el producto';
+		}
+		this.products[productIndex] = {...this.products[productIndex], ...UpdatedFields};
+		this.saveProductsToFile();
+		return 'Producto actualizado';
+	}
+	deleteProduct(id){
+		this.products = this.products.filter(product => product.id !== id);
+		this.saveProductsToFile();
+		return 'Producto eliminado';
 	}
 	getProductById(pid){
 		const result = this.products.find(prod =>prod.id === pid)
@@ -39,6 +66,7 @@ class ProductManager {
 		}
 		return result
 	}
+
 }
 
 const products = new ProductManager()
