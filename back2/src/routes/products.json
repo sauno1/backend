@@ -1,0 +1,13 @@
+[
+  {
+    "id": 1,
+    "title": "manzana",
+    "description": "linda",
+    "price": "50",
+    "code": "3",
+    "stock": "1",
+    "status": "true",
+    "category": "comida",
+    "image": "/uploads/1703430643851_unnamed (4).jpg"
+  }
+]

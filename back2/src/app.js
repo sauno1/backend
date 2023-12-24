@@ -2,7 +2,12 @@ const express = require('express');
 const ProductManager = require('./ProductManager.js');
 const app = express();
 const productManager = new ProductManager(); 
+const productsRouter = require('./routes/products.router');
+const cartsRouter = require('./routes/carts.router');
 
+app.use(express.json());
+app.use('/api/carts', cartsRouter);
+app.use('/api/products', productsRouter);
 
 productManager.loadProductsFromFile('products.json'); 
 
@@ -37,3 +42,4 @@ app.get('/products/:pid', (req, res) => {
 app.listen(8080, () => {
     console.log('Escuchando en el puerto 8080');
 });
+
