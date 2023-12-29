@@ -9,5 +9,16 @@
     "status": "true",
     "category": "comida",
     "image": "/uploads/1703430643851_unnamed (4).jpg"
+  },
+  {
+    "id": 2,
+    "title": "manzana",
+    "description": "fea",
+    "price": "40",
+    "code": "3",
+    "stock": "2",
+    "status": "true",
+    "category": "comida",
+    "image": "/uploads/1703891067757_descarga.jpg"
   }
 ]

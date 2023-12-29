@@ -43,30 +43,38 @@ router.get('/:cid', (req, res) => {
     }
 });
 
-
 router.post('/:cid/product/:pid', (req, res) => {
     const cartId = parseInt(req.params.cid);
     const productId = parseInt(req.params.pid);
-    const quantity = parseInt(req.body.quantity || 1); 
+    const quantity = parseInt(req.body.quantity || 1);
 
-    const carts = readProductsData(); 
+    const carts = readProductsData();
     const cart = carts.find(cart => cart.id === cartId);
 
     if (cart) {
-        const productToAdd = {
-            id: productId,
-            quantity: quantity
-        };
+        const existingProductIndex = cart.products.findIndex(product => product.id === productId);
 
-        cart.products.push(productToAdd);
+        if (existingProductIndex !== -1) {
+           
+            cart.products[existingProductIndex].quantity += quantity;
+        } else {
+           
+            const productToAdd = {
+                id: productId,
+                quantity: quantity
+            };
+            cart.products.push(productToAdd);
+        }
 
-        fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(carts, null, 2), 'utf8'); 
+        fs.writeFileSync(PRODUCTS_FILE, JSON.stringify(carts, null, 2), 'utf8');
 
         res.send('Producto agregado al carrito');
     } else {
         res.status(404).send('Carrito no encontrado');
     }
 });
+
+
 
 module.exports = router;
 

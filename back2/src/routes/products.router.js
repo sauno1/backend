@@ -81,11 +81,12 @@ router.post('/', upload.single('image'), (req, res) => {
 });
 
 
-router.put('/:pid', (req, res) => {
+router.put('/:pid', upload.single('image'), (req, res) => {
     const productId = parseInt(req.params.pid);
     const { title, description, price, code, stock, status, category } = req.body;
+    const image = req.file;
 
-    if (!title || !description || !price || !code || !stock || !status || !category) {
+    if (!title || !description || !price || !code || !stock || !status || !category || !image) {
         return res.status(400).send('Faltan campos requeridos');
     }
 
@@ -96,6 +97,8 @@ router.put('/:pid', (req, res) => {
         return res.status(404).send('Producto no encontrado');
     }
 
+   
+
     products[productIndex] = {
         ...products[productIndex],
         title,
@@ -104,13 +107,14 @@ router.put('/:pid', (req, res) => {
         code,
         stock,
         status,
-        category
-        
+        category,
+        image: `/uploads/${newImageName}` 
     };
 
     saveProductsData(products);
     res.send('Producto actualizado');
 });
+
 
 
 router.delete('/:pid', (req, res) => {
