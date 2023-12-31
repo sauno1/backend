@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <h1>Lista de Productos</h1>
+    <ul id="productList">
+        {{#each products}}
+            <li>{{this.title}} - {{this.description}}</li>
+        {{/each}}
+    </ul>
+    <form id="productForm">
+        <input type="text" name="title" placeholder="Nombre del Producto">
+        <input type="text" name="description" placeholder="Descripción">
+        <input type="number" name="price" placeholder="Precio">
+        <input type="text" name="code" placeholder="Código">
+        <input type="number" name="stock" placeholder="Stock">
+        <input type="text" name="status" placeholder="Estado">
+        <input type="text" name="category" placeholder="Categoría">
+        <button type="submit">Agregar Producto</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/index.js"></script>
+</body>
+</html>
