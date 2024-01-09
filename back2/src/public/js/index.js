@@ -1,36 +1,48 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const socket = io();
+const socket = io(); // Crear conexión al servidor
 
-    socket.on('productsUpdated', updatedProducts => {
-        const productList = document.getElementById('productList');
+const productForm = document.getElementById('productForm');
+const productList = document.getElementById('productList');
 
-        productList.innerHTML = '';
-
-        updatedProducts.forEach(product => {
-            const listItem = document.createElement('li');
-            listItem.textContent = `${product.title} - ${product.description}`;
-            productList.appendChild(listItem);
-        });
+// Enviar los datos del formulario al servidor cuando se envía
+productForm.addEventListener('submit', event => {
+    event.preventDefault();
+    
+    const formData = new FormData(productForm);
+    const productData = {};
+    
+    formData.forEach((value, key) => {
+        productData[key] = value;
     });
+    
+    socket.emit('addProduct', productData);
+    productForm.reset();
+});
 
-    const productForm = document.getElementById('productForm');
-
-    productForm.addEventListener('submit', event => {
-        event.preventDefault();
-
-        const formData = new FormData(productForm);
-        const newProductData = {
-            title: formData.get('title'),
-            description: formData.get('description'),
-            price: formData.get('price'),
-            code: formData.get('code'),
-            stock: formData.get('stock'),
-            status: formData.get('status'),
-            category: formData.get('category')
-        };
-
-        socket.emit('addProduct', newProductData);
+// Recibir actualizaciones de productos desde el servidor y actualizar la lista
+socket.on('productsUpdated', products => {
+    productList.innerHTML = '';
+    products.forEach(product => {
+        const li = document.createElement('li');
+        li.textContent = `${product.title} - ${product.description}`;
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Eliminar';
+        deleteButton.classList.add('deleteProduct');
+        deleteButton.dataset.id = product.id;
+        
+        li.appendChild(deleteButton);
+        productList.appendChild(li);
     });
 });
+
+// Manejar la solicitud de eliminar producto
+document.addEventListener('click', event => {
+    if (event.target.classList.contains('deleteProduct')) {
+        const productId = event.target.dataset.id;
+        socket.emit('deleteProduct', productId);
+    }
+});
+
+
 
 

@@ -1,3 +1,4 @@
+const { Server: ServerIO } = require('socket.io')
 const express = require('express');
 const ProductManager = require('./ProductManager.js');
 const app = express();
@@ -5,7 +6,7 @@ const productManager = new ProductManager();
 const productsRouter = require('./routes/products.router');
 const cartsRouter = require('./routes/carts.router');
 const handlebars = require('express-handlebars')
-const { Server: ServerIO } = require('socket.io')
+
 const fs = require('fs');
 
 
@@ -24,7 +25,7 @@ productManager.loadProductsFromFile('products.json');
 
 
 app.get('/', (req, res) => {
-    res.render('index', { products: productManager.getProducts() });
+   res.render('index', { products: productManager.getProducts() });
 });
 
 app.get('/realtimeproducts', (req, res) => {
@@ -58,6 +59,7 @@ const httpServer = app.listen(8080, () => {
 });
 
 const socketServer = new ServerIO(httpServer)
+app.set('socketServer', socketServer);
 
 socketServer.on('connection', socket =>{
     console.log('cliente conectado');
@@ -67,6 +69,12 @@ socketServer.on('connection', socket =>{
         productManager.addProduct(product);
         socketServer.emit('productsUpdated', productManager.getProducts());
     });
+
+    socket.on('deleteProduct', productId => {
+        productManager.deleteProduct(productId);
+        socketServer.emit('productsUpdated', productManager.getProducts());
+    });
+
 
     // Agregar más eventos aquí si es necesario
 
@@ -86,5 +94,3 @@ function processDataFromForm(formData) {
        
     };
 }
-
-

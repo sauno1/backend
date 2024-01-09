@@ -7,11 +7,14 @@
 </head>
 <body>
     <h1>Lista de Productos</h1>
-    <ul id="productList">
-        {{#each products}}
-            <li>{{this.title}} - {{this.description}}</li>
-        {{/each}}
-    </ul>
+  <ul id="productList">
+    {{#each products}}
+        <li>
+            {{this.title}} - {{this.description}}
+            <button class="deleteProduct" data-id="{{this.id}}">Eliminar</button>
+        </li>
+    {{/each}}
+</ul>
     <form id="productForm">
         <input type="text" name="title" placeholder="Nombre del Producto">
         <input type="text" name="description" placeholder="Descripción">
