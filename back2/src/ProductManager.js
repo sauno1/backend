@@ -48,7 +48,7 @@ class ProductManager {
     }
 
     deleteProduct(id) {
-        this.products = this.products.filter(product => product.id !== id);
+        this.products = this.products.filter(product => product.id != id);
         this.saveProductsToFile();
         return 'Producto eliminado';
     }
