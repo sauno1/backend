@@ -5,10 +5,14 @@ const app = express();
 const productManager = new ProductManager(); 
 const productsRouter = require('./routes/products.router');
 const cartsRouter = require('./routes/carts.router');
+const chatRouter = require('./routes/chat.router')
 const handlebars = require('express-handlebars')
+const { connectDB} = require('./config/connectDB.js')
+
 
 const fs = require('fs');
 
+connectDB();
 
 app.use(express.static(__dirname+'/public'))
 app.engine('handlebars', handlebars.engine())
@@ -19,9 +23,10 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}))
 app.use('/api/carts', cartsRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/chat', chatRouter);
 
 
-productManager.loadProductsFromFile('products.json'); 
+productManager.loadProductsFromFile('products.json');  
 
 
 app.get('/', (req, res) => {
